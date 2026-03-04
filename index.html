@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: MongoDB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .mongo-green {
+            color: #47A248;
+        }
+
+        .bg-mongo-green {
+            background-color: #47A248;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body class="text-gray-800 antialiased p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-8 border-t-8 border-green-600 text-center">
+        <div class="flex justify-center mb-4">
+            <!-- MongoDB Logo SVG (Simplified) -->
+            <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 0C50 0 25 25 25 55C25 75 40 90 50 100C60 90 75 75 75 55C75 25 50 0 50 0Z" fill="#47A248" />
+                <path d="M50 15C50 15 35 35 35 55C35 65 40 75 50 85C60 75 65 65 65 55C65 35 50 15 50 15Z"
+                    fill="#589636" />
+            </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Guía Rápida de MongoDB</h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Conceptos clave, diseño, consultas y exportación de datos
+            para la gestión de bases de datos masivas NoSQL.</p>
+    </header>
+
+    <!-- Grid Container -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- 1. Conceptos Básicos -->
+        <div class="card bg-white p-6 rounded-2xl shadow border border-gray-100">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-green-100 rounded-lg mr-4">
+                    <svg class="w-6 h-6 mongo-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
+                        </path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-semibold">1. Arquitectura</h2>
+            </div>
+            <ul class="space-y-3 text-gray-600">
+                <li><span class="font-bold text-gray-800">NoSQL Orientada a Documentos:</span> Almacena datos en
+                    estructuras BSON (similar a JSON).</li>
+                <li><span class="font-bold text-gray-800">Equivalencias:</span>
+                    <ul class="ml-4 mt-1 list-disc list-inside text-sm">
+                        <li>Tabla (SQL) = <span class="text-green-600 font-semibold">Collection</span></li>
+                        <li>Registro (SQL) = <span class="text-green-600 font-semibold">Documento</span></li>
+                    </ul>
+                </li>
+                <li><span class="font-bold text-gray-800">Atributo _id:</span> Todo documento tiene un <code>_id</code>
+                    único que garantiza su unicidad.</li>
+                <li><span class="font-bold text-gray-800">Puerto por defecto:</span> <code>27017</code>.</li>
+            </ul>
+        </div>
+
+        <!-- 2. Patrones de Diseño -->
+        <div class="card bg-white p-6 rounded-2xl shadow border border-gray-100">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-blue-100 rounded-lg mr-4">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                        </path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-semibold">2. Patrones de Diseño</h2>
+            </div>
+            <p class="text-sm text-gray-500 mb-3">La forma de modelar los datos es vital para el rendimiento:</p>
+            <ul class="space-y-4 text-sm text-gray-600">
+                <li class="bg-gray-50 p-2 rounded">
+                    <span class="font-bold text-gray-800 block mb-1">1:1 Documentos Embebidos</span>
+                    Un documento dentro de otro. Ej. Un usuario con su dirección incrustada.
+                </li>
+                <li class="bg-gray-50 p-2 rounded">
+                    <span class="font-bold text-gray-800 block mb-1">1:N Documentos Embebidos</span>
+                    Un array de documentos dentro de uno principal. Ej. Un usuario y sus múltiples direcciones.
+                </li>
+                <li class="bg-gray-50 p-2 rounded">
+                    <span class="font-bold text-gray-800 block mb-1">1:N Documentos Referidos</span>
+                    Para evitar repetición. Se guarda el <code>_id</code> de otros documentos (como llaves foráneas).
+                </li>
+            </ul>
+        </div>
+
+        <!-- 3. Consultas (Lectura) -->
+        <div class="card bg-gray-800 text-white p-6 rounded-2xl shadow">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-gray-700 rounded-lg mr-4">
+                    <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-semibold text-white">3. Consultas (Find)</h2>
+            </div>
+            <p class="text-sm text-gray-300 mb-3">Lectura de datos en colecciones:</p>
+            <div class="bg-black p-3 rounded font-mono text-xs text-green-400 mb-3">
+                db.coleccion.find({criterios}, {proyeccion})
+            </div>
+            <ul class="space-y-2 text-sm text-gray-300">
+                <li><span class="text-yellow-400 font-bold">Criterios:</span> Condiciones de búsqueda usando operadores.
+                </li>
+                <li><span class="text-yellow-400 font-bold">Proyección:</span> Indica qué atributos mostrar u ocultar.
+                </li>
+                <li><span class="text-yellow-400 font-bold">Operadores Lógicos:</span> <code>$or</code>,
+                    <code>$not</code>.</li>
+                <li><span class="text-yellow-400 font-bold">Operadores de Comparación:</span>
+                    <br><code>$gt</code> (mayor que), <code>$in</code> (incluido en).
+                </li>
+            </ul>
+        </div>
+
+        <!-- 4. Modificación de Datos (CUD) -->
+        <div class="card bg-white p-6 rounded-2xl shadow border border-gray-100">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-purple-100 rounded-lg mr-4">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                        </path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-semibold">4. Insertar y Actualizar</h2>
+            </div>
+            <ul class="space-y-4 text-sm text-gray-600">
+                <li>
+                    <span class="font-bold text-gray-800 text-base">Insertar:</span>
+                    <p class="mt-1"><code>db.coleccion.insert()</code> o <code>save()</code>. Para inserciones múltiples
+                        se envían arrays. *Es clave usar <code>try-catch</code> para manejo de errores.</p>
+                </li>
+                <li>
+                    <span class="font-bold text-gray-800 text-base">Actualizar:</span>
+                    <p class="mt-1"><code>db.coleccion.update()</code></p>
+                    <ul class="list-disc ml-4 mt-1 text-xs">
+                        <li><span class="font-semibold">multi: true</span> Modifica todos los documentos que coincidan.
+                        </li>
+                        <li><span class="font-semibold">upsert: true</span> Inserta un documento nuevo si ninguno cumple
+                            la condición de búsqueda.</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="font-bold text-gray-800 text-base">Eliminar:</span>
+                    <p class="mt-1"><code>remove()</code> o <code>deleteOne()</code> para borrar uno o varios registros.
+                    </p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 5. Exportación de Datos -->
+        <div
+            class="card md:col-span-2 lg:col-span-2 bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow border border-green-200">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-green-600 rounded-lg mr-4">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-semibold text-green-900">5. Pasos para Exportar Datos (mongoexport)</h2>
+            </div>
+            <p class="text-gray-700 mb-4">La herramienta <code>mongoexport</code> permite exportar colecciones enteras o
+                resultados de consultas a archivos <strong>JSON</strong> o <strong>CSV</strong>. Se ejecuta desde la
+                terminal del sistema operativo, <strong>no</strong> desde la consola de MongoDB (mongosh).</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-gray-800 mb-2">Exportar a formato JSON</h3>
+                    <div class="bg-gray-800 text-green-400 p-3 rounded font-mono text-xs overflow-x-auto">
+                        mongoexport --db=miBaseDatos --collection=usuarios --out=usuarios.json
+                    </div>
+                    <ol class="list-decimal list-inside mt-3 text-sm text-gray-600 space-y-1">
+                        <li>Abre tu terminal (cmd, bash, terminal).</li>
+                        <li>Indica la base de datos con <code>--db</code>.</li>
+                        <li>Indica la colección con <code>--collection</code>.</li>
+                        <li>Define el nombre de salida con <code>--out</code>.</li>
+                    </ol>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-gray-800 mb-2">Exportar a formato CSV</h3>
+                    <div
+                        class="bg-gray-800 text-green-400 p-3 rounded font-mono text-xs overflow-x-auto whitespace-nowrap">
+                        mongoexport --db=miBaseDatos --collection=usuarios --type=csv --fields=nombre,edad,email
+                        --out=usuarios.csv
+                    </div>
+                    <ol class="list-decimal list-inside mt-3 text-sm text-gray-600 space-y-1">
+                        <li>Añade la bandera <code>--type=csv</code>.</li>
+                        <li>Es <strong>obligatorio</strong> especificar los campos a exportar usando
+                            <code>--fields</code> separados por comas.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-8 text-center text-sm text-gray-500">
+        <p>Infografía generada con base en los contenidos del tema "Bases de Datos para el Big Data" (NoSQL, MongoDB).
+        </p>
+    </footer>
+
+</body>
+
+</html>
