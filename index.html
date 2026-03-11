@@ -38,7 +38,7 @@
             </svg>
         </div>
         <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Guía Rápida de MongoDB</h1>
-        <p class="text-lg text-gray-600 max-w-3xl mx-auto">Conceptos clave, diseño, gestión de BD, consultas (CRUD), importación y exportación de datos.</p>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">Conceptos clave, diseño, gestión de BD, consultas (CRUD), importación, exportación y agregación de datos.</p>
     </header>
 
     <!-- Grid Container -->
@@ -221,7 +221,7 @@
             </div>
         </div>
 
-        <!-- 7. EJEMPLOS PRÁCTICOS (NUEVO) -->
+        <!-- 7. EJEMPLOS PRÁCTICOS -->
         <div class="card md:col-span-2 lg:col-span-3 bg-gray-900 text-white p-6 rounded-2xl shadow border border-gray-700 mt-2">
             <div class="flex items-center mb-6">
                 <div class="p-3 bg-gray-800 rounded-lg mr-4 border border-gray-600">
@@ -338,6 +338,218 @@
                     Ayuda a construir consultas fluidas y visualizar resultados de forma muy amigable (mencionada en videoclase 3.2).
                 </li>
             </ul>
+        </div>
+
+        <!-- 11. TEMA 4: Agregación en MongoDB -->
+        <div class="card md:col-span-2 lg:col-span-3 bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-2xl shadow border border-blue-200 mt-2">
+            <div class="flex items-center mb-6">
+                <div class="p-3 bg-blue-600 rounded-lg mr-4 shadow-md">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold text-blue-900">11. Agregación en MongoDB (Tema 4)</h2>
+                    <p class="text-sm text-blue-700">Técnicas para analizar, procesar y resumir grandes volúmenes de datos.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- MapReduce -->
+                <div class="bg-white p-5 rounded-xl border border-blue-100 shadow-sm flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-red-100 text-red-700 text-[10px] font-bold px-2 py-1 rounded-bl-lg uppercase tracking-widest">Deprecado</div>
+                    <h3 class="font-bold text-blue-800 mb-3 text-lg border-b pb-2 pr-16">Método 1: MapReduce</h3>
+                    <p class="text-sm text-gray-600 mb-3">Modelo clásico de Big Data. Filtra y agrupa datos emitiendo pares <code>clave/valor</code>.</p>
+                    <ul class="space-y-2 text-sm text-gray-700 mb-3">
+                        <li class="bg-red-50 p-2 rounded text-red-800 border border-red-100"><span class="font-bold">¡Atención!</span> Prácticamente obsoleto en versiones recientes debido a su alta complejidad de programación. Mongo ya no apuesta por él.</li>
+                        <li><span class="font-semibold text-blue-600">Fase MAP:</span> Emite los pares (Ej. clave constante "suma" y atributo "precio" como valor).</li>
+                        <li><span class="font-semibold text-blue-600">Fase REDUCE:</span> Toma los pares agrupados y realiza la operación final (suma total).</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-blue-800 text-xs uppercase tracking-wider mb-2">Parámetros Extendidos:</h4>
+                    <ul class="grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-gray-600 mb-4 bg-gray-50 p-2 rounded border border-gray-100">
+                        <li><code class="text-blue-600 font-bold">query:</code> Filtra antes de procesar.</li>
+                        <li><code class="text-blue-600 font-bold">sort:</code> Orden previo.</li>
+                        <li><code class="text-blue-600 font-bold">limit:</code> Límite de documentos.</li>
+                        <li><code class="text-blue-600 font-bold">finalize:</code> Refina el resultado.</li>
+                        <li><code class="text-blue-600 font-bold">scope:</code> Variables globales.</li>
+                        <li><code class="text-blue-600 font-bold">verbose:</code> Tiempos de proceso.</li>
+                    </ul>
+
+                    <div class="bg-gray-800 p-3 rounded font-mono text-xs text-blue-300 overflow-x-auto mt-auto opacity-75">
+                        db.productos.mapReduce( mapFn, reduceFn, { out: "resultados", query: { categoria: "A" } } )
+                    </div>
+                </div>
+
+                <!-- Aggregate Framework -->
+                <div class="bg-white p-5 rounded-xl border border-blue-100 shadow-sm flex flex-col ring-2 ring-blue-400">
+                    <h3 class="font-bold text-blue-800 mb-3 text-lg border-b pb-2">Método 2: Aggregate (La Apuesta Actual)</h3>
+                    <p class="text-sm text-gray-600 mb-3">Destacado por su <strong>relevancia y flexibilidad</strong>. Es tan potente que a menudo reemplaza al comando <code>find()</code> tradicional para búsquedas avanzadas.</p>
+                    
+                    <!-- Pipeline Visual -->
+                    <div class="mb-4 flex items-center justify-between text-xs font-semibold text-blue-900 bg-blue-50 p-3 rounded-lg border border-blue-100 shadow-inner">
+                        <div class="flex flex-col items-center text-center"><span class="bg-blue-200 text-blue-800 px-2 py-1 rounded mb-1 shadow-sm">$match</span>Filtro<br>inicial</div>
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <div class="flex flex-col items-center text-center"><span class="bg-blue-200 text-blue-800 px-2 py-1 rounded mb-1 shadow-sm">$group</span>Agrupa y<br>Opera</div>
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <div class="flex flex-col items-center text-center"><span class="bg-blue-200 text-blue-800 px-2 py-1 rounded mb-1 shadow-sm">$sort</span>Ordena<br>resultado</div>
+                    </div>
+
+                    <ul class="space-y-2 text-sm text-gray-700 mb-4">
+                        <li><code class="text-blue-600 font-bold">$match:</code> Funciona <strong>exactamente igual</strong> que los criterios de búsqueda de un <code>find()</code>.</li>
+                        <li><code class="text-blue-600 font-bold">$group:</code> Agrupa por <code>_id</code> y aplica transformaciones con operadores muy especializados.</li>
+                        <li><code class="text-blue-600 font-bold">$sort:</code> Retorna la salida en un orden específico.</li>
+                    </ul>
+
+                    <div class="bg-gray-800 p-3 rounded font-mono text-xs text-green-300 overflow-x-auto mt-auto">
+<span class="text-gray-400">// Ejemplo: Sumar ventas por región</span>
+db.ventas.aggregate([
+  { $match: { estado: "Aprobado" } },
+  { $group: { _id: "$region", total: { $sum: "$monto" } } }
+])
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operadores Avanzados (Videoclase 3) -->
+            <div class="mt-6 bg-white p-5 rounded-xl border border-blue-100 shadow-sm">
+                <h3 class="font-bold text-blue-800 mb-3 text-lg border-b pb-2 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    Profundización: Etapas Avanzadas del Pipeline
+                </h3>
+                <p class="text-sm text-gray-600 mb-4">El <strong>Aggregation Framework</strong> se vuelve extremadamente potente cuando combinamos múltiples etapas. A continuación, las operaciones más críticas para cruzar y transformar datos:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <h4 class="font-bold text-blue-900 text-sm mb-2 flex items-center"><span class="bg-blue-200 text-blue-800 px-1 rounded mr-2">$lookup</span> El "JOIN" de Mongo</h4>
+                        <p class="text-xs text-gray-700 leading-relaxed">Cruza datos de dos colecciones distintas. Une documentos de una colección externa basándose en un campo local y uno foráneo. Genera un nuevo array con los datos cruzados.</p>
+                    </div>
+
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <h4 class="font-bold text-blue-900 text-sm mb-2 flex items-center"><span class="bg-blue-200 text-blue-800 px-1 rounded mr-2">$unwind</span> Desenrollar Arrays</h4>
+                        <p class="text-xs text-gray-700 leading-relaxed">Si un documento tiene un array de 3 elementos, <code>$unwind</code> lo descompone y genera 3 documentos independientes. Es <strong>vital</strong> usarlo justo después de un <code>$lookup</code>.</p>
+                    </div>
+
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <h4 class="font-bold text-blue-900 text-sm mb-2 flex items-center"><span class="bg-blue-200 text-blue-800 px-1 rounded mr-2">$sort & $limit</span> Orden y Paginación</h4>
+                        <p class="text-xs text-gray-700 leading-relaxed"><code>$sort</code> ordena los resultados pasados (<code>1</code> ascendente, <code>-1</code> descendente). <code>$limit</code> restringe la cantidad de documentos que continúan, ideal para un "Top 10".</p>
+                    </div>
+
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <h4 class="font-bold text-blue-900 text-sm mb-2 flex items-center"><span class="bg-blue-200 text-blue-800 px-1 rounded mr-2">$project</span> Redimensionar</h4>
+                        <p class="text-xs text-gray-700 leading-relaxed">Formatea los documentos. Oculta campos innecesarios (0), muestra los requeridos (1), o crea campos calculados para la salida final.</p>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 lg:col-span-2">
+                        <h4 class="font-bold text-blue-900 text-sm mb-2 flex items-center"><span class="bg-blue-200 text-blue-800 px-1 rounded mr-2">$group</span> Agrupación y Acumuladores</h4>
+                        <p class="text-xs text-gray-700 leading-relaxed mb-1">Agrupa por un <code>_id</code> definido y aplica cálculos matemáticos a todo el grupo de forma simultánea:</p>
+                        <ul class="text-xs text-gray-700 grid grid-cols-2 gap-x-2 gap-y-1 list-disc list-inside">
+                            <li><code>$sum</code>: Sumatoria.</li>
+                            <li><code>$avg</code>: Promedio numérico.</li>
+                            <li><code>$min</code> / <code>$max</code>: Valor mínimo/máximo.</li>
+                            <li><code>$first</code> / <code>$last</code>: Extrae el primer/último valor.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-4 rounded-lg font-mono text-xs text-blue-300 overflow-x-auto leading-relaxed shadow-inner">
+<span class="text-gray-400">// EJEMPLO MAESTRO: Top 3 Países con mayores compras, cruzando Ventas con Usuarios</span>
+db.ventas.aggregate([
+  <span class="text-gray-400">// 1. JOIN: Unimos la venta con la colección "usuarios" (por usuario_id)</span>
+  { <span class="text-pink-400">$lookup</span>: { from: "usuarios", localField: "usuario_id", foreignField: "_id", as: "datos_usuario" } },
+  
+  <span class="text-gray-400">// 2. DESENROLLAR: Convertimos el array "datos_usuario" en documentos planos</span>
+  { <span class="text-pink-400">$unwind</span>: "$datos_usuario" },
+  
+  <span class="text-gray-400">// 3. FILTRAR: Solo procesar ventas que sí se concretaron</span>
+  { <span class="text-yellow-400">$match</span>: { estado: "Finalizado" } },
+  
+  <span class="text-gray-400">// 4. AGRUPAR: Por país del usuario y sumar todos los montos de compra</span>
+  { <span class="text-yellow-400">$group</span>: { _id: "$datos_usuario.pais", total_ventas: { $sum: "$monto" } } },
+  
+  <span class="text-gray-400">// 5. ORDENAR: De mayor a menor total de ventas (-1)</span>
+  { <span class="text-purple-400">$sort</span>: { total_ventas: -1 } },
+  
+  <span class="text-gray-400">// 6. LIMITAR: Mostrar únicamente el Top 3</span>
+  { <span class="text-purple-400">$limit</span>: 3 }
+])
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. Índices y Rendimiento -->
+        <div class="card bg-white p-6 rounded-2xl shadow border border-gray-100 flex flex-col mt-2">
+            <div class="flex items-center mb-4">
+                <div class="p-3 bg-amber-100 rounded-lg mr-4 shadow-sm">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-semibold">12. Índices (Rendimiento)</h2>
+            </div>
+            <p class="text-sm text-gray-500 mb-3">En <strong>Datos Masivos</strong>, hacer un <code>find()</code> sin índices obliga a Mongo a escanear toda la colección (<em>Collection Scan</em>), lo cual es ineficiente.</p>
+            <ul class="space-y-3 text-sm text-gray-600 flex-grow">
+                <li><span class="font-bold text-gray-800">Crear un Índice:</span> Acelera las consultas drásticamente.</li>
+            </ul>
+            <div class="bg-gray-800 p-3 rounded font-mono text-xs text-amber-300 overflow-x-auto mt-3">
+                <span class="text-gray-400">// 1 para ascendente, -1 descendente</span><br>
+                db.usuarios.createIndex({ "email": 1 })
+            </div>
+            <p class="text-xs text-gray-500 mt-2 italic">*Nota: El _id ya tiene un índice por defecto.</p>
+        </div>
+
+        <!-- 13. Ecosistema: Docker, Cloud y Drivers (AMPLIADO Y EXPLICADO) -->
+        <div class="card md:col-span-2 lg:col-span-3 bg-white p-6 rounded-2xl shadow border border-slate-200 flex flex-col mt-2">
+            <div class="flex items-center mb-6">
+                <div class="p-3 bg-slate-800 rounded-lg mr-4 shadow-md">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold text-slate-800">13. Ecosistema: Docker, Nube y Drivers</h2>
+                    <p class="text-sm text-slate-600">Del entorno local a la nube y cómo conectarlo a tus aplicaciones (Flujo del Mundo Real).</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Docker Explicado -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-slate-800 text-lg mb-2 flex items-center"><span class="text-2xl mr-2">🐳</span> 1. Entorno Local (Docker)</h4>
+                    <p class="text-xs text-gray-600 mb-3">Evita instalar Mongo en tu sistema operativo, levántalo de forma aislada en un contenedor. El puerto local estándar es <strong>27017</strong>.</p>
+                    <div class="bg-slate-800 p-3 rounded font-mono text-xs text-blue-300 overflow-x-auto mt-auto leading-relaxed">
+                        <span class="text-slate-400"># -d: Corre en segundo plano</span><br>
+                        <span class="text-slate-400"># -p: Mapea tu puerto local con el del contenedor</span><br>
+                        <span class="text-slate-400"># --name: Le da un nombre a la instancia</span><br>
+                        docker run -d -p 27017:27017 --name mi_mongo mongo:latest
+                        <br><br>
+                        <span class="text-slate-400"># -> URI de Conexión Local:</span><br>
+                        <span class="text-green-400 font-bold">mongodb://localhost:27017</span>
+                    </div>
+                </div>
+                
+                <!-- Cloud Atlas Explicado -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-slate-800 text-lg mb-2 flex items-center"><span class="text-2xl mr-2">☁️</span> 2. Entorno Cloud (Atlas)</h4>
+                    <p class="text-xs text-gray-600 mb-3">Para producción, usa <strong>MongoDB Atlas</strong> (DBaaS). Te entregará una cadena de conexión (URI) que incluye credenciales, el clúster y la BD.</p>
+                    <div class="bg-slate-800 p-3 rounded font-mono text-xs text-white overflow-x-auto mt-auto break-all leading-relaxed">
+                        <span class="text-slate-400">// Desglose de la Cadena de Conexión</span><br>
+                        mongodb+srv://<span class="text-yellow-400 border-b border-yellow-400 pb-0.5" title="Tu usuario">admin</span>:<span class="text-yellow-400 border-b border-yellow-400 pb-0.5" title="Tu contraseña">P@ssw0rd123</span>@<span class="text-blue-300 border-b border-blue-300 pb-0.5" title="Servidor (Cluster)">cluster0.abcde.mongodb.net</span>/<span class="text-pink-400 border-b border-pink-400 pb-0.5" title="Nombre de tu Base de Datos">miBaseDatos</span>?retryWrites=true
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-2 italic">*Así se estructura la URI para que programas externos o MongoDB Compass se conecten.</p>
+                </div>
+
+                <!-- Drivers (Python) Explicado y Completo -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-slate-800 text-lg mb-2 flex items-center"><span class="text-2xl mr-2">🔌</span> 3. Conexión a App (Drivers)</h4>
+                    <p class="text-xs text-gray-600 mb-3">Tus programas (Python, Node.js, Java) usan librerías llamadas <strong>Drivers</strong> para enviar los comandos CRUD a la base de datos.</p>
+                    <div class="bg-slate-800 p-3 rounded font-mono text-xs text-amber-300 overflow-x-auto mt-auto leading-relaxed">
+                        <span class="text-purple-400">import</span> pymongo<br><br>
+                        <span class="text-slate-400"># 1. Establecer conexión (Usa tu URI de Atlas o Local)</span><br>
+                        cliente = pymongo.MongoClient(<span class="text-green-400">"mongodb+srv://..."</span>)<br>
+                        <span class="text-slate-400"># Apuntar a la colección "usuarios"</span><br>
+                        coleccion = cliente.miBaseDatos.usuarios<br><br>
+                        <span class="text-slate-400"># 2. Flujo Completo: Insertar y Buscar</span><br>
+                        coleccion.insert_one({<span class="text-green-400">"rol"</span>: <span class="text-green-400">"Admin"</span>})<br>
+                        resultado = coleccion.find_one({<span class="text-green-400">"rol"</span>: <span class="text-green-400">"Admin"</span>})<br>
+                        <span class="text-blue-300">print</span>(resultado)
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
