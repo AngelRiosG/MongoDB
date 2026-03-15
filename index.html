@@ -38,7 +38,7 @@
             </svg>
         </div>
         <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Guía Rápida de MongoDB</h1>
-        <p class="text-lg text-gray-600 max-w-3xl mx-auto">Conceptos clave, diseño, gestión de BD, consultas (CRUD), importación, exportación y agregación de datos.</p>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">Conceptos clave, diseño, gestión de BD, consultas (CRUD), agregación, seguridad y optimización de rendimiento.</p>
     </header>
 
     <!-- Grid Container -->
@@ -344,7 +344,7 @@
         <div class="card md:col-span-2 lg:col-span-3 bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-2xl shadow border border-blue-200 mt-2">
             <div class="flex items-center mb-6">
                 <div class="p-3 bg-blue-600 rounded-lg mr-4 shadow-md">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
                 <div>
                     <h2 class="text-2xl font-semibold text-blue-900">11. Agregación en MongoDB (Tema 4)</h2>
@@ -475,30 +475,74 @@ db.ventas.aggregate([
             </div>
         </div>
 
-        <!-- 12. Índices y Rendimiento -->
-        <div class="card bg-white p-6 rounded-2xl shadow border border-gray-100 flex flex-col mt-2">
-            <div class="flex items-center mb-4">
-                <div class="p-3 bg-amber-100 rounded-lg mr-4 shadow-sm">
-                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <!-- 12. Creación de Índices y Rendimiento (TEMA 5) -->
+        <div class="card md:col-span-2 lg:col-span-3 bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-2xl shadow border border-amber-200 mt-2">
+            <div class="flex items-center mb-6">
+                <div class="p-3 bg-amber-500 rounded-lg mr-4 shadow-md border border-amber-600">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <h2 class="text-2xl font-semibold">12. Índices (Rendimiento)</h2>
+                <div>
+                    <h2 class="text-2xl font-semibold text-amber-900">12. Creación de Índices y Rendimiento (Tema 5)</h2>
+                    <p class="text-sm text-amber-700">Evita el <em>Collection Scan</em> optimizando el tiempo de ejecución de las consultas en grandes colecciones.</p>
+                </div>
             </div>
-            <p class="text-sm text-gray-500 mb-3">En <strong>Datos Masivos</strong>, hacer un <code>find()</code> sin índices obliga a Mongo a escanear toda la colección (<em>Collection Scan</em>), lo cual es ineficiente.</p>
-            <ul class="space-y-3 text-sm text-gray-600 flex-grow">
-                <li><span class="font-bold text-gray-800">Crear un Índice:</span> Acelera las consultas drásticamente.</li>
-            </ul>
-            <div class="bg-gray-800 p-3 rounded font-mono text-xs text-amber-300 overflow-x-auto mt-3">
-                <span class="text-gray-400">// 1 para ascendente, -1 descendente</span><br>
-                db.usuarios.createIndex({ "email": 1 })
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Concepto y Sintaxis -->
+                <div class="bg-white p-5 rounded-xl border border-amber-100 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-amber-800 text-lg mb-2">Fundamento y Sintaxis</h4>
+                    <p class="text-xs text-gray-700 leading-relaxed mb-3">Hacer un <code>find()</code> sin índices obliga a Mongo a leer cada documento de la colección para encontrar lo que buscas. Para evitar esto, se usa <code>createIndex()</code>, el cual recibe dos argumentos JSON: las <strong>claves</strong> y las <strong>opciones</strong>.</p>
+                    
+                    <div class="bg-gray-800 p-3 rounded font-mono text-xs text-amber-300 overflow-x-auto mt-auto leading-relaxed shadow-inner">
+                        <span class="text-gray-400">// Sintaxis General</span><br>
+                        db.coleccion.<span class="text-yellow-400">createIndex</span>(<br>
+                        &nbsp;&nbsp;{ <span class="text-green-400">claves</span> }, <span class="text-gray-400">// 1 para ascendente, -1 para descendente</span><br>
+                        &nbsp;&nbsp;{ <span class="text-pink-400">opciones</span> }<br>
+                        )
+                    </div>
+                </div>
+
+                <!-- Opciones (Videoclase 3) -->
+                <div class="bg-white p-5 rounded-xl border border-amber-100 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-amber-800 text-lg mb-2">Catálogo de Opciones</h4>
+                    <p class="text-xs text-gray-700 mb-3">Permiten personalizar drásticamente el comportamiento del índice:</p>
+                    <ul class="space-y-2 text-xs text-gray-700 mb-4 list-disc list-inside">
+                        <li><code class="text-amber-600 font-bold">background</code>: Si es <em>true</em>, construye el índice en 2do plano sin bloquear otras operaciones de la BD.</li>
+                        <li><code class="text-amber-600 font-bold">unique</code>: Si es <em>true</em>, rechaza insertar documentos si ya existe ese valor (Ej. un email duplicado).</li>
+                        <li><code class="text-amber-600 font-bold">name</code>: Permite asignar una cadena de texto personalizada como nombre del índice.</li>
+                        <li><code class="text-amber-600 font-bold">sparse</code>: Si es <em>true</em>, solo indexa los documentos que <strong>sí</strong> contengan ese atributo (ahorra espacio).</li>
+                        <li><code class="text-amber-600 font-bold text-[10px] line-through">dropDups</code>: <span class="text-gray-500">Histórico/Deprecado. Eliminaba duplicados forzosamente al crear un índice único.</span></li>
+                        <li><code class="text-amber-600 font-bold">v</code>: Versión del formato del índice (usado por el motor interno).</li>
+                    </ul>
+                </div>
+                
+                <!-- Ejemplo Avanzado -->
+                <div class="bg-amber-900 p-5 rounded-xl border border-amber-700 shadow-md flex flex-col lg:col-span-2 text-white">
+                    <h4 class="font-bold text-amber-100 text-sm mb-2">Ejemplo Práctico Aplicando Opciones</h4>
+                    <p class="text-xs text-amber-200 mb-3">Supongamos que queremos indexar la colección "usuarios" por el campo "email". Queremos que la búsqueda sea rápida (ascendente), que ningún usuario pueda repetir email (unique), que solo indexe usuarios que sí registraron email (sparse) y que no detenga el servidor mientras se crea (background):</p>
+                    
+                    <div class="bg-black p-4 rounded font-mono text-xs text-white overflow-x-auto leading-relaxed shadow-inner">
+                        db.usuarios.createIndex(<br>
+                        &nbsp;&nbsp;<span class="text-gray-400">// 1. El objeto CLAVES</span><br>
+                        &nbsp;&nbsp;{ <span class="text-green-400">"email"</span>: 1 }, <br>
+                        &nbsp;&nbsp;<span class="text-gray-400">// 2. El objeto OPCIONES</span><br>
+                        &nbsp;&nbsp;{<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-pink-400">unique</span>: <span class="text-purple-400">true</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-pink-400">background</span>: <span class="text-purple-400">true</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-pink-400">sparse</span>: <span class="text-purple-400">true</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-pink-400">name</span>: <span class="text-green-400">"idx_email_unico"</span><br>
+                        &nbsp;&nbsp;}<br>
+                        )
+                    </div>
+                </div>
             </div>
-            <p class="text-xs text-gray-500 mt-2 italic">*Nota: El _id ya tiene un índice por defecto.</p>
         </div>
 
-        <!-- 13. Ecosistema: Docker, Cloud y Drivers (AMPLIADO Y EXPLICADO) -->
+        <!-- 13. Ecosistema: Docker, Cloud y Drivers -->
         <div class="card md:col-span-2 lg:col-span-3 bg-white p-6 rounded-2xl shadow border border-slate-200 flex flex-col mt-2">
             <div class="flex items-center mb-6">
                 <div class="p-3 bg-slate-800 rounded-lg mr-4 shadow-md">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
                 <div>
                     <h2 class="text-2xl font-semibold text-slate-800">13. Ecosistema: Docker, Nube y Drivers</h2>
@@ -552,10 +596,327 @@ db.ventas.aggregate([
             </div>
         </div>
 
+        <!-- 14. TEMA 5: Gestión Avanzada y Seguridad -->
+        <div class="card md:col-span-2 lg:col-span-3 bg-gradient-to-r from-gray-800 to-gray-900 p-6 rounded-2xl shadow border border-gray-700 mt-2 text-white">
+            <div class="flex items-center mb-6">
+                <div class="p-3 bg-gray-700 rounded-lg mr-4 shadow-md border border-gray-600">
+                    <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold text-white">14. Gestión Avanzada, Seguridad y Sharding (Tema 5)</h2>
+                    <p class="text-sm text-gray-400">Administración de clústeres, roles de usuario y escalabilidad horizontal.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Seguridad y Roles -->
+                <div class="bg-gray-800 p-5 rounded-xl border border-gray-600 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-yellow-400 text-lg mb-2 flex items-center">🔐 Seguridad Nativa y Cifrado</h4>
+                    <p class="text-xs text-gray-300 mb-3">Gestión granular de accesos. Desde Mongo 3.2, incluye <strong>cifrado en reposo</strong> nativo (WiredTiger). Esto asegura la protección de los datos a nivel de almacenamiento físico del disco.</p>
+                    <div class="bg-black p-3 rounded font-mono text-xs text-green-300 overflow-x-auto mt-auto leading-relaxed">
+                        <span class="text-gray-500">// Crear un administrador de BD</span><br>
+                        use admin<br>
+                        db.createUser({<br>
+                        &nbsp;&nbsp;user: "adminSuper",<br>
+                        &nbsp;&nbsp;pwd: "Pass123!",<br>
+                        &nbsp;&nbsp;roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]<br>
+                        })
+                    </div>
+                </div>
+
+                <!-- Sharding (Fragmentación) -->
+                <div class="bg-gray-800 p-5 rounded-xl border border-gray-600 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-blue-400 text-lg mb-2 flex items-center">🗄️ Sharding (Escalabilidad)</h4>
+                    <p class="text-xs text-gray-300 mb-3">Permite repartir la carga de datos masivos entre diferentes servidores (nodos) para garantizar la escalabilidad futura y optimizar el rendimiento. Requiere una <strong>Clave de Fragmentación (Shard Key)</strong>.</p>
+                    <div class="bg-black p-3 rounded font-mono text-xs text-blue-300 overflow-x-auto mt-auto leading-relaxed">
+                        <span class="text-gray-500">// 1. Habilitar Sharding en la BD</span><br>
+                        sh.enableSharding("tienda")<br><br>
+                        <span class="text-gray-500">// 2. Fragmentar colección por una clave</span><br>
+                        sh.shardCollection("tienda.ventas", { "pais_origen": 1 })
+                    </div>
+                </div>
+                
+                <!-- Catálogo de Roles de Administración -->
+                <div class="bg-gray-800 p-5 rounded-xl border border-gray-600 shadow-sm flex flex-col lg:col-span-2 mt-2">
+                    <h4 class="font-bold text-yellow-400 text-lg mb-3 flex items-center"><span class="text-xl mr-2">🎭</span> Catálogo de Roles Predefinidos</h4>
+                    <p class="text-xs text-gray-400 mb-4">MongoDB incluye roles con niveles de acceso granulares para mantener la seguridad en producción y limitar privilegios:</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- dbOwner -->
+                        <div class="bg-gray-900 p-4 rounded-lg border border-gray-700">
+                            <h5 class="font-bold text-pink-400 text-sm mb-1">dbOwner</h5>
+                            <p class="text-[11px] text-gray-400 leading-relaxed"><strong>Dueño de la Base de Datos.</strong> Otorga control total sobre una BD específica. Combina permisos de lectura, escritura y la capacidad de administrar a otros usuarios (<em>dbAdmin</em> y <em>userAdmin</em>).</p>
+                        </div>
+                        
+                        <!-- clusterMonitor -->
+                        <div class="bg-gray-900 p-4 rounded-lg border border-gray-700">
+                            <h5 class="font-bold text-blue-400 text-sm mb-1">clusterMonitor</h5>
+                            <p class="text-[11px] text-gray-400 leading-relaxed"><strong>Solo lectura.</strong> Ideal para herramientas de supervisión. Permite acceder a métricas y estadísticas del sistema sin poder visualizar la información de los usuarios ni modificar configuraciones.</p>
+                        </div>
+
+                        <!-- hostManager -->
+                        <div class="bg-gray-900 p-4 rounded-lg border border-gray-700">
+                            <h5 class="font-bold text-green-400 text-sm mb-1">hostManager</h5>
+                            <p class="text-[11px] text-gray-400 leading-relaxed"><strong>Admin de Servidores.</strong> Permite gestionar servicios individuales (<em>mongod</em> o <em>mongos</em>), cambiar configuraciones del servidor en tiempo real, forzar cierres (shutdown) y gestionar registros (logs).</p>
+                        </div>
+
+                        <!-- clusterAdmin -->
+                        <div class="bg-gray-900 p-4 rounded-lg border border-gray-700">
+                            <h5 class="font-bold text-yellow-500 text-sm mb-1">clusterAdmin / Manager</h5>
+                            <p class="text-[11px] text-gray-400 leading-relaxed"><strong>Alta Administración.</strong> <code>clusterManager</code> gestiona replicación y fragmentación (Sharding). <code>clusterAdmin</code> es el rango máximo a nivel de la arquitectura: une todos los roles de clúster.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 15. Protección en Producción (Límites y Restricciones) -->
+        <div class="card md:col-span-2 lg:col-span-3 bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-2xl shadow border border-red-200 mt-2">
+            <div class="flex items-center mb-6">
+                <div class="p-3 bg-red-600 rounded-lg mr-4 shadow-md border border-red-500">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold text-red-900">15. Protección en Producción (Límites y Restricciones)</h2>
+                    <p class="text-sm text-red-700">Configuraciones críticas en el archivo <code>mongod.conf</code> para evitar sobrecargas, ataques y restringir el acceso a herramientas.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Limitar Conexiones -->
+                <div class="bg-white p-5 rounded-xl border border-red-100 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-red-800 text-lg mb-2">🛑 Limitar Conexiones</h4>
+                    <p class="text-xs text-gray-700 leading-relaxed mb-3">Por defecto, Mongo permite miles de conexiones simultáneas. En producción, un error en tu código o un ataque puede agotar la memoria RAM del servidor rápidamente. Es vital establecer un techo con el parámetro <code>maxIncomingConnections</code>.</p>
+                </div>
+
+                <!-- Restricción de Red y Herramientas -->
+                <div class="bg-white p-5 rounded-xl border border-red-100 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-red-800 text-lg mb-2">🚧 Restricción de Red e IPs</h4>
+                    <p class="text-xs text-gray-700 leading-relaxed mb-3">Nunca expongas Mongo a todo internet (IP <code>0.0.0.0</code>). Usa <code>bindIp</code> para limitar la escucha <strong>exclusivamente</strong> a la IP interna de tu aplicación. Esto bloquea automáticamente herramientas externas no autorizadas (como un Compass ajeno) a nivel de red.</p>
+                </div>
+
+                <!-- Ejemplo mongod.conf -->
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-700 shadow-sm flex flex-col lg:col-span-1">
+                    <h4 class="font-bold text-green-400 text-sm mb-2">Ejemplo Real (mongod.conf)</h4>
+                    <div class="bg-black p-3 rounded font-mono text-xs text-blue-300 overflow-x-auto mt-auto leading-relaxed">
+                        <span class="text-gray-500"># 1. Restricción de Red y Conexiones</span><br>
+                        <span class="text-yellow-400">net:</span><br>
+                        &nbsp;&nbsp;port: 27017<br>
+                        &nbsp;&nbsp;<span class="text-gray-500"># Solo admite Localhost y la IP de tu App</span><br>
+                        &nbsp;&nbsp;bindIp: 127.0.0.1, 10.0.0.15<br>
+                        &nbsp;&nbsp;<span class="text-gray-500"># Limita a 100 conexiones simultáneas</span><br>
+                        &nbsp;&nbsp;<span class="text-pink-400">maxIncomingConnections: 100</span><br><br>
+                        <span class="text-gray-500"># 2. Obligar Autenticación a Herramientas</span><br>
+                        <span class="text-yellow-400">security:</span><br>
+                        &nbsp;&nbsp;authorization: <span class="text-green-400">"enabled"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 16. Estrategias de Respaldo y Migración (Tema 5, Videoclase 2) -->
+        <div class="card md:col-span-2 lg:col-span-3 bg-gradient-to-r from-teal-50 to-emerald-50 p-6 rounded-2xl shadow border border-teal-200 mt-2">
+            <div class="flex items-center mb-6">
+                <div class="p-3 bg-teal-600 rounded-lg mr-4 shadow-md border border-teal-500">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold text-teal-900">16. Estrategias de Respaldo y Migración (Tema 5)</h2>
+                    <p class="text-sm text-teal-700">Métodos seguros para respaldar bases de datos masivas: desde copias físicas hasta herramientas lógicas.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Método 1: Copia de Sistema de Ficheros -->
+                <div class="bg-white p-5 rounded-xl border border-teal-100 shadow-sm flex flex-col relative overflow-hidden">
+                    <h4 class="font-bold text-teal-800 text-lg mb-2">📁 1. Copia del Sistema de Ficheros (Física)</h4>
+                    <p class="text-xs text-gray-700 leading-relaxed mb-3">Consiste en copiar literalmente la carpeta donde MongoDB guarda los datos en el disco duro para moverla a otro servidor.</p>
+                    <div class="bg-red-50 border-l-4 border-red-500 p-3 mb-4 rounded-r">
+                        <p class="text-xs text-red-800 font-semibold">¡PRECAUCIÓN CRÍTICA!</p>
+                        <p class="text-xs text-red-700">Es <strong>obligatorio detener el servidor</strong> (mongod) antes de hacer la copia. Si el servidor está en ejecución, los datos se corromperán irremediablemente.</p>
+                    </div>
+                    <div class="bg-black p-3 rounded font-mono text-xs text-blue-300 overflow-x-auto mt-auto leading-relaxed">
+                        <span class="text-gray-500"># 1. Apagar el servicio (Linux)</span><br>
+                        sudo systemctl stop mongod<br><br>
+                        <span class="text-gray-500"># 2. Copiar el directorio de datos</span><br>
+                        cp -R /var/lib/mongo /backups/mongo_backup_fisico<br><br>
+                        <span class="text-gray-500"># 3. Reiniciar el servicio</span><br>
+                        sudo systemctl start mongod
+                    </div>
+                </div>
+
+                <!-- Método 2: mongodump / mongorestore -->
+                <div class="bg-white p-5 rounded-xl border border-teal-100 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-teal-800 text-lg mb-2">🛠️ 2. Herramientas Lógicas</h4>
+                    <p class="text-xs text-gray-700 leading-relaxed mb-3"><code>mongodump</code> y <code>mongorestore</code> permiten respaldar bases de datos en caliente (sin apagar el servidor). Son flexibles para servidores completos, BD individuales o colecciones específicas.</p>
+                    <div class="bg-black p-3 rounded font-mono text-xs text-green-300 overflow-x-auto mt-auto leading-relaxed">
+                        <span class="text-gray-500"># mongodump: Respaldo de una BD específica</span><br>
+                        mongodump --db=tienda --out=/backups/logicos/<br><br>
+                        <span class="text-gray-500"># mongorestore: Restaurar con puerto específico</span><br>
+                        mongorestore --port=27017 /backups/logicos/tienda<br><br>
+                        <span class="text-gray-500"># mongorestore: Escenario complejo (con Auth)</span><br>
+                        mongorestore --host=10.0.0.15 --port=27017 \<br>
+                        &nbsp;&nbsp;--username=admin --password=claveSegura \<br>
+                        &nbsp;&nbsp;--authenticationDatabase=admin /backups/datos
+                    </div>
+                </div>
+                
+                <!-- Replicación vs Backups -->
+                <div class="bg-teal-800 p-5 rounded-xl border border-teal-900 shadow-sm flex flex-col lg:col-span-2 text-white mt-2">
+                    <h4 class="font-bold text-teal-100 text-lg mb-2 flex items-center">⚖️ Replicación vs Backups (Aclaración Clave)</h4>
+                    <p class="text-xs text-teal-50 leading-relaxed">La videoclase hace una distinción vital para entornos de producción:</p>
+                    <ul class="mt-2 text-xs space-y-2 list-disc list-inside text-teal-100">
+                        <li><strong>Backups (mongodump / Copia física):</strong> Son "instantáneas" (snapshots) en un momento específico del tiempo. Sirven para recuperar datos borrados accidentalmente o registros históricos.</li>
+                        <li><strong>Replicación de Nodos (Replica Sets):</strong> Es una copia <em>continua y en tiempo real</em> en múltiples servidores. Su objetivo no es recuperar datos borrados (porque el borrado también se replica instantáneamente), sino garantizar <strong>alta disponibilidad</strong> si un servidor se cae.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 17. Escalabilidad Horizontal (Sharding) -->
+        <div class="card md:col-span-2 lg:col-span-3 bg-gradient-to-r from-violet-50 to-purple-50 p-6 rounded-2xl shadow border border-violet-200 mt-2">
+            <div class="flex items-center mb-6">
+                <div class="p-3 bg-violet-600 rounded-lg mr-4 shadow-md border border-violet-500">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M12 7c0 2.21 3.582 4 8 4s8-1.79 8-4M12 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold text-violet-900">17. Escalabilidad Horizontal: Sharding (Tema 5)</h2>
+                    <p class="text-sm text-violet-700">Arquitectura para distribuir datos masivos a través de múltiples servidores, maximizando el rendimiento y el almacenamiento.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- 3 Componentes Principales -->
+                <div class="bg-white p-5 rounded-xl border border-violet-100 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-violet-800 text-lg mb-3">Los 3 Componentes Principales</h4>
+                    <p class="text-xs text-gray-700 leading-relaxed mb-4">Un <strong>Sharded Cluster</strong> no es un solo servidor; es una arquitectura completa formada por tres piezas clave que trabajan en sincronía:</p>
+                    
+                    <div class="space-y-3 flex-grow">
+                        <div class="bg-violet-50 p-3 rounded-lg border border-violet-100">
+                            <h5 class="font-bold text-violet-900 text-sm mb-1 flex items-center"><span class="text-lg mr-2">📦</span> 1. Shards</h5>
+                            <p class="text-xs text-gray-700 leading-relaxed">Contienen los subconjuntos reales de datos. En un entorno de producción, cada Shard suele ser un <em>Replica Set</em> para garantizar que no se pierdan datos si un servidor físico se apaga.</p>
+                        </div>
+                        <div class="bg-violet-50 p-3 rounded-lg border border-violet-100">
+                            <h5 class="font-bold text-violet-900 text-sm mb-1 flex items-center"><span class="text-lg mr-2">🚦</span> 2. Query Routers (mongos)</h5>
+                            <p class="text-xs text-gray-700 leading-relaxed">Actúan como "directores de tráfico". Reciben las consultas de las aplicaciones clientes y saben exactamente a qué Shard enviarlas. La app nunca interactúa con el Shard directamente.</p>
+                        </div>
+                        <div class="bg-violet-50 p-3 rounded-lg border border-violet-100">
+                            <h5 class="font-bold text-violet-900 text-sm mb-1 flex items-center"><span class="text-lg mr-2">🧠</span> 3. Config Servers</h5>
+                            <p class="text-xs text-gray-700 leading-relaxed">Almacenan los metadatos y la configuración del clúster. Son el "mapa" que le dice a los Query Routers en qué Shard se encuentra almacenado cada fragmento específico de información.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pasos de Configuración -->
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-700 shadow-md flex flex-col text-white">
+                    <h4 class="font-bold text-violet-300 text-lg mb-2">Pasos para Configurar un Sharded Cluster</h4>
+                    <p class="text-xs text-gray-400 mb-3">Secuencia estricta para levantar esta arquitectura (vista en clase):</p>
+                    
+                    <div class="bg-black p-4 rounded-lg font-mono text-xs text-white overflow-x-auto leading-relaxed shadow-inner flex-grow">
+                        <span class="text-gray-500"># PASO 1: Iniciar los Config Servers</span><br>
+                        <span class="text-gray-500"># (Utilizan el puerto por defecto 27019)</span><br>
+                        <span class="text-blue-300">mongod</span> --configsvr --replSet confRepl --port 27019<br><br>
+                        
+                        <span class="text-gray-500"># PASO 2: Iniciar los Query Routers (instancias mongos)</span><br>
+                        <span class="text-gray-500"># Se le debe indicar a qué Config Server conectarse</span><br>
+                        <span class="text-blue-300">mongos</span> --configdb confRepl/localhost:27019 --port 27017<br><br>
+                        
+                        <span class="text-gray-500"># PASO 3: Agregar Shards al clúster</span><br>
+                        <span class="text-gray-500"># (Entramos a la terminal del 'mongos' y ejecutamos:)</span><br>
+                        <span class="text-yellow-400">sh</span>.addShard(<span class="text-green-400">"shard01/localhost:27018"</span>)<br><br>
+                        
+                        <span class="text-gray-500"># PASO 4: Habilitar Sharding a nivel BD y Colección</span><br>
+                        <span class="text-gray-500"># Habilitamos la base de datos:</span><br>
+                        <span class="text-yellow-400">sh</span>.enableSharding(<span class="text-green-400">"tienda"</span>)<br>
+                        <span class="text-gray-500"># Fragmentamos la colección indicando el "Patrón" (Shard Key):</span><br>
+                        <span class="text-yellow-400">sh</span>.shardCollection(<span class="text-green-400">"tienda.ventas"</span>, { <span class="text-green-400">"pais_origen"</span>: 1 })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 18. Integración y Drivers (TEMA 6) -->
+        <div class="card md:col-span-2 lg:col-span-3 bg-gradient-to-r from-sky-50 to-blue-50 p-6 rounded-2xl shadow border border-sky-200 mt-2 mb-10">
+            <div class="flex items-center mb-6">
+                <div class="p-3 bg-sky-600 rounded-lg mr-4 shadow-md border border-sky-500">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold text-sky-900">18. Integración con Aplicaciones (Drivers) - Tema 6</h2>
+                    <p class="text-sm text-sky-700">Cómo conectar y comunicar tus programas y el ecosistema Big Data con la base de datos.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Concepto y Ecosistema -->
+                <div class="bg-white p-5 rounded-xl border border-sky-100 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-sky-800 text-lg mb-2 flex items-center">🔌 ¿Qué es un Driver?</h4>
+                    <p class="text-xs text-gray-700 leading-relaxed mb-3">Es un software que actúa como <strong>intermediario</strong> entre la base de datos y el código de tu aplicación. Permite consultar y gestionar los datos sin importar el lenguaje en el que estés programando.</p>
+                    <h5 class="font-bold text-sky-900 text-sm mt-2 mb-1">Lenguajes y Soporte Oficial</h5>
+                    <p class="text-xs text-gray-700 leading-relaxed">El ecosistema de MongoDB proporciona una amplia gama de <strong>drivers oficiales</strong> con soporte continuo para lenguajes populares como: Java, Python (PyMongo), Node.js, C#, Ruby, entre otros.</p>
+                </div>
+
+                <!-- Conectores Big Data -->
+                <div class="bg-white p-5 rounded-xl border border-sky-100 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-sky-800 text-lg mb-2 flex items-center">🔗 Comunidad y Ecosistema</h4>
+                    <p class="text-xs text-gray-700 leading-relaxed mb-3">En el análisis de datos masivos (Big Data), Mongo se integra con otras herramientas potentes mediante la comunidad y conectores especializados.</p>
+                    <div class="bg-sky-50 p-3 rounded-lg border border-sky-100 mt-auto">
+                        <h5 class="font-bold text-sky-900 text-sm mb-1">MongoDB Hadoop Connector</h5>
+                        <p class="text-xs text-gray-700 leading-relaxed">Es un plugin esencial que permite utilizar MongoDB como una fuente de entrada (input) o un destino de salida (output) en sistemas de procesamiento masivo basados en el framework de <strong>Hadoop</strong>.</p>
+                    </div>
+                </div>
+
+                <!-- Ejemplo Java -->
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-700 shadow-md flex flex-col text-white">
+                    <h4 class="font-bold text-sky-300 text-lg mb-2">☕ Ejemplo Práctico (Java)</h4>
+                    <p class="text-[11px] text-gray-400 mb-2">El primer paso en Java es tener las librerías necesarias para el Driver. Hay dos opciones comunes:</p>
+                    <ul class="text-[10px] text-gray-300 mb-3 list-disc list-inside">
+                        <li>Usar gestores como <strong>Maven</strong> (dependencias en <code>pom.xml</code>).</li>
+                        <li>Descargar directamente los archivos <strong>.jar</strong> oficiales.</li>
+                    </ul>
+                    <div class="bg-black p-3 rounded-lg font-mono text-[11px] text-white overflow-x-auto leading-relaxed shadow-inner mt-auto">
+                        <span class="text-gray-500">// 1. Conexión por defecto (localhost)</span><br>
+                        <span class="text-sky-400">MongoClient</span> cliente = <span class="text-pink-400">new</span> <span class="text-sky-400">MongoClient</span>();<br><br>
+                        
+                        <span class="text-gray-500">// 2. Conexión a host y puerto</span><br>
+                        <span class="text-sky-400">MongoClient</span> cliente = <span class="text-pink-400">new</span> <span class="text-sky-400">MongoClient</span>(<span class="text-green-400">"localhost"</span>, <span class="text-orange-400">27017</span>);<br><br>
+                        
+                        <span class="text-gray-500">// 3. Seleccionar la base de datos</span><br>
+                        <span class="text-sky-400">MongoDatabase</span> db = cliente.getDatabase(<span class="text-green-400">"miApp"</span>);
+                    </div>
+                </div>
+
+                <!-- Ejemplo Python (NUEVO) -->
+                <div class="bg-gray-900 p-5 rounded-xl border border-gray-700 shadow-md flex flex-col text-white">
+                    <h4 class="font-bold text-yellow-300 text-lg mb-2">🐍 Ejemplo Práctico (Python)</h4>
+                    <p class="text-[11px] text-gray-400 mb-2">Python usa <strong>PyMongo</strong>, el driver preferido en entornos de Data Science y Analítica de Datos:</p>
+                    <ul class="text-[10px] text-gray-300 mb-3 list-disc list-inside">
+                        <li>Instalación rápida vía terminal: <code>pip install pymongo</code></li>
+                    </ul>
+                    <div class="bg-black p-3 rounded-lg font-mono text-[11px] text-white overflow-x-auto leading-relaxed shadow-inner mt-auto">
+                        <span class="text-gray-500"># 1. Importar la librería</span><br>
+                        <span class="text-pink-400">from</span> pymongo <span class="text-pink-400">import</span> MongoClient<br><br>
+
+                        <span class="text-gray-500"># 2. Conexión al servidor (Local o URI de Atlas)</span><br>
+                        cliente = MongoClient(<span class="text-green-400">"mongodb://localhost:27017/"</span>)<br><br>
+                        
+                        <span class="text-gray-500"># 3. Acceder a BD y Colección</span><br>
+                        db = cliente[<span class="text-green-400">"miApp"</span>]<br>
+                        coleccion = db[<span class="text-green-400">"usuarios"</span>]<br><br>
+
+                        <span class="text-gray-500"># 4. Consultar un dato</span><br>
+                        resultado = coleccion.find_one({<span class="text-green-400">"rol"</span>: <span class="text-green-400">"Admin"</span>})<br>
+                        <span class="text-blue-300">print</span>(resultado)
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Footer -->
-    <footer class="max-w-7xl mx-auto mt-10 mb-6 text-center text-sm text-gray-500">
+    <footer class="max-w-7xl mx-auto mt-6 mb-10 text-center text-sm text-gray-500">
         <p>Infografía generada con base en los contenidos del tema "Bases de Datos para el Big Data" (NoSQL, MongoDB).</p>
     </footer>
 
